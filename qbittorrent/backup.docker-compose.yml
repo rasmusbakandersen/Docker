@@ -1,0 +1,47 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - 3022:8080 # Web UI (mapped through VPN container)
+      # No need to map 6881; Gluetun handles the VPN tunnel. 
+      # Mullvad requires manual port forwarding setup on their website if you want to be "connectable" (see Step 3 below).
+    #  - 3038:8000/tcp    # Gluetun control server for Homepage widget
+    volumes:
+      - ./gluetun:/gluetun
+    environment:
+      - VPN_SERVICE_PROVIDER=mullvad
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=REDACTED
+      - WIREGUARD_ADDRESSES=10.73.48.32/32
+      - SERVER_COUNTRIES=Denmark # Or Netherlands, Sweden, etc.
+      - TZ=Europe/Copenhagen
+    restart: always
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Copenhagen
+      - WEBUI_PORT=8080
+    volumes:
+      - ./config:/config:Z
+      - /mnt/nas-arrstack/downloads:/downloads
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080 || pgrep -f qbittorrent || exit 1"]
+      interval: 2m
+      timeout: 20s
+      retries: 2
+      start_period: 60s
+#    ports:
+#      - "8080:8080"
+    network_mode: service:gluetun # <--- THE MAGIC LINE
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    restart: unless-stopped

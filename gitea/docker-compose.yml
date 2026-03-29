@@ -1,0 +1,60 @@
+services:
+  gitea:
+    container_name: ${GITEA_CONTAINER_NAME}
+    image: gitea/gitea:latest
+    extra_hosts:
+      - "gitea.sanxer.dk:host-gateway"
+      - "auth.sanxer.dk:192.168.86.8"
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__database__DB_TYPE=sqlite3
+      - GITEA__server__ROOT_URL=https://gitea.sanxer.dk/
+      - GITEA__server__HTTP_PORT=3000
+      - GITEA__server__SSH_DOMAIN=gitea.sanxer.dk
+      - GITEA__server__SSH_PORT=2222
+      - GITEA__server__START_SSH_SERVER=true
+      - GITEA__server__SSH_LISTEN_PORT=2222
+      - GITEA__webhook__ALLOWED_HOST_LIST=woodpecker.sanxer.dk
+    volumes:
+      - ./data:/data:z
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "2222:2222"
+    dns:
+      - 192.168.86.10
+      - 1.1.1.1
+    restart: unless-stopped
+    networks:
+      - gitea_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID
+      - FOWNER
+      - DAC_OVERRIDE
+      - NET_BIND_SERVICE
+    pids_limit: 200
+    mem_limit: 512m
+    cpus: 1.0
+    tmpfs:
+      - /tmp:noexec,nosuid,size=256m
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+networks:
+  gitea_network:
+    name: gitea_network

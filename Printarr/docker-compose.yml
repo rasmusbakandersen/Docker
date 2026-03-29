@@ -1,0 +1,27 @@
+services:
+  printscan:
+    build: .
+    container_name: printscan
+    restart: unless-stopped
+    environment:
+      PRINTER_NAME: "Epson-XP2155"
+      SCAN_DIR: /app/scans
+      PAPERLESS_CONSUME: /paperless-consume
+    volumes:
+      - printscan_scans:/app/scans
+      - /home/rasmus/docker/paperless/consume:/paperless-consume
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    privileged: true
+    networks:
+      - printarr_network
+
+volumes:
+  printscan_scans:
+    driver: local
+
+
+networks:
+  printarr_network:
+    driver: bridge
+    name: printarr_network

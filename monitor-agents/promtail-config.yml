@@ -1,0 +1,43 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  # Change this IP to the server where your Loki is running
+  - url: http://192.168.86.8:4035/loki/api/v1/push
+scrape_configs:
+  # System logs
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: system
+          host: HomeLab3
+          __path__: /var/log/*.log
+
+  # Journal logs (systemd)
+  - job_name: journal
+    journal:
+      max_age: 12h
+      labels:
+        job: journal
+        host: HomeLab3
+    relabel_configs:
+      - source_labels: ["__journal__systemd_unit"]
+        target_label: unit
+
+  # Docker container logs
+  - job_name: docker
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: docker
+          host: HomeLab3
+          __path__: /var/lib/docker/containers/**/*.log
+    pipeline_stages:
+      - docker: {}

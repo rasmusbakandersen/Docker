@@ -1,0 +1,13 @@
+**/.env
+**/data/
+**/config/
+**/caddy_data/
+**/caddy_config/
+**/caddy_logs/
+**/*.db
+**/*.sqlite
+**/*.log
+**/db/
+**/logs/
+**/netalertx/
+**/crowdsec/db/
