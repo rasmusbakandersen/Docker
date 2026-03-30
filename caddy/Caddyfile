@@ -180,7 +180,11 @@ proxmox3.sanxer.dk {
     }
 }
 
-portainer.sanxer.dk {
-    import logging portainer
-    reverse_proxy 192.168.86.10:9002
+
+dozzle.sanxer.dk {
+#    forward_auth auth1.sanxer.dk {
+#        uri /api/authz/forward-auth
+#        copy_headers Remote-User Remote-Groups Remote-Name Remote-Email
+#    }
+    reverse_proxy 192.168.86.10:8085
 }
