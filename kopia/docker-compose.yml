@@ -1,0 +1,28 @@
+services:
+  kopia:
+    image: kopia/kopia:latest
+    container_name: kopia
+    restart: unless-stopped
+    hostname: homelab3
+    command:
+      - server
+      - start
+      - --insecure
+      - --address=0.0.0.0:51515
+      - --server-control-username=admin
+      - --server-control-password=${KOPIA_UI_PASSWORD}
+    environment:
+      - KOPIA_PASSWORD=${KOPIA_REPO_PASSWORD}
+      - TZ=Europe/Copenhagen
+    volumes:
+      - /mnt/nas-kopia:/repository
+      - ./config:/app/config
+      - ./cache:/app/cache
+      - ./logs:/app/logs
+      - /home/rasmus/docker:/sources/docker:ro
+    ports:
+      - "51515:51515"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL

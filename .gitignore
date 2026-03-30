@@ -11,3 +11,6 @@
 **/logs/
 **/netalertx/
 **/crowdsec/db/
+kopia/cache/
+kopia/logs/
+kopia/config/
