@@ -1,0 +1,177 @@
+{
+    admin 0.0.0.0:2019
+    acme_dns cloudflare {env.CF_API_TOKEN}
+    servers {
+        trusted_proxies static private_ranges
+    }
+}
+
+(authelia) {
+    forward_auth http://192.168.86.12:32347 {
+        uri /api/authz/forward-auth?authelia_url=https://auth1.sanxer.dk
+        copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
+    }
+}
+
+(security_headers) {
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options SAMEORIGIN
+        Referrer-Policy strict-origin-when-cross-origin
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        -Server
+    }
+}
+
+(logging) {
+    log {
+        output file /var/log/caddy/{args[0]}.log {
+            roll_size 10mb
+            roll_keep 5
+        }
+        format json
+    }
+}
+
+gitea.sanxer.dk {
+    import authelia
+    import security_headers
+    import logging gitea
+    reverse_proxy gitea:3000
+}
+
+
+
+
+
+
+
+
+
+pihole.sanxer.dk {
+    import security_headers
+    import logging pihole
+    reverse_proxy 192.168.86.10:8090
+}
+
+netalertx.sanxer.dk {
+    import authelia
+    import security_headers
+    import logging netalertx
+    reverse_proxy 192.168.86.10:20211
+}
+
+plex.sanxer.dk {
+    import authelia
+    import security_headers
+    import logging plex
+    reverse_proxy 192.168.86.6:32400
+}
+
+switch.sanxer.dk {
+    redir / /web permanent
+    import authelia
+    import security_headers
+    import logging switch
+    reverse_proxy 192.168.86.4:80
+}
+
+pfsense.sanxer.dk {
+    import authelia
+    import security_headers
+    import logging pfsense
+    reverse_proxy https://192.168.86.1:443 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}
+
+nas.sanxer.dk {
+    import authelia
+    import security_headers
+    import logging nas
+    reverse_proxy 192.168.86.6:80
+}
+
+wazuh.sanxer.dk {
+    import authelia
+    import security_headers
+    import logging wazuh
+    reverse_proxy https://192.168.86.12:8443 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}
+
+proxmox1.sanxer.dk {
+    reverse_proxy https://192.168.86.20:8006 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}
+
+proxmox2.sanxer.dk {
+    reverse_proxy https://192.168.86.21:8006 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}
+
+proxmox3.sanxer.dk {
+    reverse_proxy https://192.168.86.22:8006 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}
+
+
+dozzle.sanxer.dk {
+    import authelia
+    reverse_proxy 192.168.86.10:8085
+}
+
+kopia.sanxer.dk {
+    reverse_proxy http://kopia:51515
+}
+
+longhorn.sanxer.dk {
+    import security_headers
+    import authelia
+    reverse_proxy https://192.168.86.12:443 {
+        header_up Host longhorn.sanxer.dk
+        transport http {
+            tls_server_name longhorn.sanxer.dk
+            tls_insecure_skip_verify
+        }
+    }
+}
+
+minio.sanxer.dk {
+    import security_headers
+    import authelia
+    reverse_proxy https://192.168.86.12:443 {
+        header_up Host minio.sanxer.dk
+        transport http {
+            tls_server_name minio.sanxer.dk
+            tls_insecure_skip_verify
+        }
+    }
+}
+
+traefik.sanxer.dk {
+    import security_headers
+    import authelia
+    reverse_proxy https://192.168.86.12:443 {
+        header_up Host traefik.sanxer.dk
+        transport http {
+            tls_server_name traefik.sanxer.dk
+            tls_insecure_skip_verify
+        }
+    }
+}
+

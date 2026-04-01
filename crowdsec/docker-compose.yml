@@ -1,0 +1,35 @@
+services:
+  crowdsec:
+    image: crowdsecurity/crowdsec:slim
+    container_name: crowdsec
+    restart: unless-stopped
+    dns:
+      - 192.168.86.10
+      - 1.1.1.1
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    security_opt:
+      - label:type:spc_t
+      - no-new-privileges:false
+    environment:
+      - COLLECTIONS=crowdsecurity/linux crowdsecurity/sshd crowdsecurity/iptables
+      - GID=1000
+      - TZ=Europe/Copenhagen
+    volumes:
+      - ./config:/etc/crowdsec:z
+      - ./db:/var/lib/crowdsec/data:z
+      - /var/log:/var/log:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "127.0.0.1:8080:8080"
+    healthcheck:
+      test: ["CMD", "cscli", "version"]
+      interval: 90s
+      timeout: 15s
+      retries: 2
+      start_period: 60s
