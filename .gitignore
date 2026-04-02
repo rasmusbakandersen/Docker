@@ -1,16 +1,39 @@
-.env
-*.env
-*.pem
-*.key
-id_rsa
-id_ed25519
-*.p12
+# Ignore everything
+*
+
+# Allow these
+!.gitignore
+!*/
+!**/docker-compose.yml
+!**/docker-compose.*.yml
+!**/*.env.example
+!**/Caddyfile
+!**/README.md
+!**/Dockerfile
+
+# Always ignore these even if unignored above
 **/config/
-**/config/
+**/data/
+**/cache/
 **/logs/
 **/*_logs/
 **/*.log
 **/*.db
 **/*.db-shm
 **/*.db-wal
-.env
+*.env
+*.pem
+*.key
+id_rsa
+id_ed25519
+*.p12
+
+# Additional source/config files to keep
+!**/*.py
+!**/*.sh
+!**/*.txt
+!**/*.html
+!**/*.yml
+!**/*.yaml
+!**/*.json
+!**/.dockerignore
