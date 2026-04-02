@@ -55,6 +55,9 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Copenhagen
+    dns:
+      - 192.168.86.10
+      - 1.1.1.1
     volumes:
       - ./config/sonarr:/config:z
       - /mnt/nas-arrstack:/data:z
@@ -95,6 +98,9 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Copenhagen
+    dns:
+      - 192.168.86.10
+      - 1.1.1.1
     volumes:
       - ./config/radarr:/config:z
       - /mnt/nas-arrstack:/data:z
@@ -135,6 +141,9 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Copenhagen
+    dns:
+      - 192.168.86.10
+      - 1.1.1.1
     volumes:
       - ./config/lidarr:/config:z
       - /mnt/nas-arrstack:/data:z
@@ -172,6 +181,9 @@ services:
       - DAC_OVERRIDE
     security_opt:
       - no-new-privileges:true
+    dns:
+      - 192.168.86.10
+      - 1.1.1.1
     volumes:
       - ./config/readarr:/config:z
       - /mnt/nas-arrstack:/data:z
@@ -322,6 +334,9 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Copenhagen
+    dns:
+      - 192.168.86.10
+      - 1.1.1.1
     volumes:
       - ./config/bazarr:/config:z
       - /mnt/nas-arrstack/movies:/movies:z

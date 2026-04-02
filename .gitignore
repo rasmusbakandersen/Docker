@@ -5,3 +5,12 @@
 id_rsa
 id_ed25519
 *.p12
+**/config/
+**/config/
+**/logs/
+**/*_logs/
+**/*.log
+**/*.db
+**/*.db-shm
+**/*.db-wal
+.env
