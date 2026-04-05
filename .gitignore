@@ -37,3 +37,11 @@ id_ed25519
 !**/*.yaml
 !**/*.json
 !**/.dockerignore
+# Container runtime data
+*/db/
+*/data/
+*_data/
+*_config/
+caddy/caddy_data/
+caddy/caddy_config/
+crowdsec/db/
