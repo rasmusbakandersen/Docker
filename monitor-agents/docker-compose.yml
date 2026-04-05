@@ -3,13 +3,12 @@ services:
     image: prom/node-exporter:latest
     container_name: node-exporter
     restart: unless-stopped
+    network_mode: host
     pid: host
     cap_drop:
       - ALL
     security_opt:
       - no-new-privileges:true
-    ports:
-      - "9000:9100"
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -19,6 +18,7 @@ services:
       - "--path.sysfs=/host/sys"
       - "--path.rootfs=/rootfs"
       - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+      - "--no-collector.kernel_hung"
     read_only: true
     tmpfs:
       - /tmp:noexec,nosuid,size=16m
@@ -43,7 +43,6 @@ services:
     security_opt:
       - no-new-privileges:true
       - label:disable
-    ports:
       - "9001:8080"
     volumes:
       - /:/rootfs:ro
