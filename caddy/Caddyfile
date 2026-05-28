@@ -40,61 +40,6 @@ gitea.sanxer.dk {
     reverse_proxy gitea:3000
 }
 
-prowlarr.sanxer.dk {
-  #  import authelia
-    import security_headers
-    import logging prowlarr
-    reverse_proxy prowlarr:9696
-}
-
-sonarr.sanxer.dk {
-  #  import authelia
-    import security_headers
-    import logging sonarr
-    reverse_proxy sonarr:8989
-}
-
-radarr.sanxer.dk {
-  #  import authelia
-    import security_headers
-    import logging radarr
-    reverse_proxy radarr:7878
-}
-
-lidarr.sanxer.dk {
-  #  import authelia
-    import security_headers
-    import logging lidarr
-    reverse_proxy lidarr:8686
-}
-
-readarr.sanxer.dk {
-    import authelia
-    import security_headers
-    import logging readarr
-    reverse_proxy bookshelf:8787
-}
-
-bazarr.sanxer.dk {
- #   import authelia
-    import security_headers
-    import logging bazarr
-    reverse_proxy bazarr:6767
-}
-
-seerr.sanxer.dk {
-    import security_headers
-    import logging seerr
-    reverse_proxy seerr:5055
-}
-
-qbittorrent.sanxer.dk {
-  #  import authelia
-    import security_headers
-    import logging qbittorrent
-    reverse_proxy gluetun:8080
-}
-
 pihole.sanxer.dk {
     import security_headers
     import logging pihole
@@ -106,13 +51,6 @@ netalertx.sanxer.dk {
     import security_headers
     import logging netalertx
     reverse_proxy 192.168.86.10:20211
-}
-
-plex.sanxer.dk {
-    import authelia
-    import security_headers
-    import logging plex
-    reverse_proxy 192.168.86.6:32400
 }
 
 switch.sanxer.dk {
